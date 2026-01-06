@@ -1,91 +1,37 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>發票掃描記錄系統</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; }
-        .loader { border-top-color: #3498db; animation: spinner 1.5s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-
-    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg">
-        <header class="bg-blue-600 text-white p-4 text-center sticky top-0 z-10">
-            <h1 class="text-xl font-bold">發票掃描系統</h1>
-            <p class="text-xs opacity-80">自動記錄至 Google Sheet</p>
-        </header>
-
-        <div class="p-4 space-y-6">
-            <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50" id="drop-area">
-                <img id="preview" class="hidden w-full h-48 object-contain mb-4 rounded shadow">
-                <div id="placeholder" class="text-center">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <p class="mt-2 text-sm text-gray-600">點擊下方按鈕拍攝發票</p>
-                </div>
-                
-                <input type="file" id="fileInput" accept="image/*" capture="camera" class="hidden" onchange="handleFile(this)">
-                
-                <button onclick="document.getElementById('fileInput').click()" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 flex items-center">
-                    <span class="mr-2">📸</span> 開始掃描發票
-                </button>
-            </div>
-
-            <div id="loadingStatus" class="hidden flex flex-col items-center py-4">
-                <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-10 w-10 mb-2"></div>
-                <p class="text-blue-600 font-medium">AI 辨識文字中...</p>
-            </div>
-
-            <div id="resultForm" class="hidden space-y-4 bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
-                <h3 class="font-bold text-gray-700 border-b pb-2">請確認辨識結果</h3>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs text-gray-500">類型</label>
-                        <select id="resType" class="w-full border-b-2 border-gray-300 py-1 focus:border-blue-500 outline-none">
-                            <option value="停車費">停車費</option>
-                            <option value="加油">加油</option>
-                            <option value="文具">文具</option>
-                            <option value="汽車保養">汽車保養</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-500">車號</label>
-                        <input type="text" id="resCarId" class="w-full border-b-2 border-gray-300 py-1 focus:border-blue-500 outline-none" placeholder="BBE-1590">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs text-gray-500">發票號碼</label>
-                    <input type="text" id="resInvoiceNum" class="w-full border-b-2 border-gray-300 py-1 focus:border-blue-500 outline-none">
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs text-gray-500">金額</label>
-                        <input type="number" id="resAmount" class="w-full border-b-2 border-gray-300 py-1 font-bold text-red-600 outline-none text-lg">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-500">備註 (提供人)</label>
-                        <input type="text" id="resNote" class="w-full border-b-2 border-gray-300 py-1 focus:border-blue-500 outline-none" placeholder="鉛筆辨識結果">
-                    </div>
-                </div>
-
-                <button onclick="submitToSheet()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg mt-4 transition">
-                    確認並存入試算表
-                </button>
-            </div>
-        </div>
+<body class="bg-gray-100 p-4">
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
+        <h2 class="text-center text-xl font-bold text-blue-600 mb-4">發票掃描記錄系統</h2>
         
-        <footer class="p-8 text-center text-gray-400 text-xs">
-            系統會自動判斷手寫姓名，若錯誤請手動修正。
-        </footer>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-2 mb-4 text-center">
+            <img id="preview" class="hidden w-full h-48 object-contain mx-auto">
+            <p id="placeholder" class="text-gray-400">尚未拍攝照片</p>
+        </div>
+
+        <input type="file" id="fileInput" accept="image/*" capture="camera" class="hidden" onchange="handleFile(this)">
+        <button onclick="document.getElementById('fileInput').click()" class="w-full bg-blue-500 text-white font-bold py-3 rounded-full mb-6 shadow-lg">
+            📸 拍照或選取發票
+        </button>
+
+        <div id="loading" class="hidden text-center text-blue-500 font-bold mb-4">AI 辨識中，請稍候...</div>
+
+        <div id="resultForm" class="space-y-4">
+            <div><label class="text-xs text-gray-500">類型</label><input id="resType" type="text" class="w-full border-b"></div>
+            <div><label class="text-xs text-gray-500">車號</label><input id="resCarId" type="text" class="w-full border-b"></div>
+            <div><label class="text-xs text-gray-500">發票號碼</label><input id="resInvoiceNum" type="text" class="w-full border-b"></div>
+            <div><label class="text-xs text-gray-500">金額</label><input id="resAmount" type="number" class="w-full border-b text-red-500 font-bold"></div>
+            <div><label class="text-xs text-gray-500">備註 (提供人)</label><input id="resNote" type="text" class="w-full border-b"></div>
+            
+            <button onclick="saveToSheet()" class="w-full bg-green-500 text-white font-bold py-3 rounded-lg shadow-md">
+                確認並存入試算表
+            </button>
+        </div>
     </div>
 
     <script>
@@ -93,40 +39,38 @@
             const file = input.files[0];
             if (!file) return;
 
-            // 顯示預覽圖
             const reader = new FileReader();
             reader.onload = function(e) {
                 document.getElementById('preview').src = e.target.result;
                 document.getElementById('preview').classList.remove('hidden');
                 document.getElementById('placeholder').classList.add('hidden');
                 
-                // 模擬啟動辨識
-                startOCR(e.target.result);
+                // 呼叫後端開始辨識
+                document.getElementById('loading').classList.remove('hidden');
+                google.script.run
+                    .withSuccessHandler(showResult)
+                    .processImage(e.target.result);
             };
             reader.readAsDataURL(file);
         }
 
-        function startOCR(base64) {
-            document.getElementById('loadingStatus').classList.remove('hidden');
-            document.getElementById('resultForm').classList.add('hidden');
-
-            // 這裡未來會接 google.script.run.uploadImage(base64)
-            // 模擬 2 秒後回傳結果
-            setTimeout(() => {
-                document.getElementById('loadingStatus').classList.add('hidden');
-                document.getElementById('resultForm').classList.remove('hidden');
-                
-                // 模擬填充辨識出的數據
-                document.getElementById('resInvoiceNum').value = "VW22028836";
-                document.getElementById('resAmount').value = "30";
-                document.getElementById('resNote').value = "偉哥"; // 模擬鉛筆辨識結果
-                document.getElementById('resCarId').value = "BBE-1590";
-            }, 2000);
+        function showResult(res) {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('resInvoiceNum').value = res.invoiceNum;
+            document.getElementById('resAmount').value = res.amount;
+            document.getElementById('resNote').value = res.note;
+            document.getElementById('resType').value = res.type;
         }
 
-        function submitToSheet() {
-            alert('正在存入 Google Sheet...');
-            // 這裡接 google.script.run.saveToSheet(formData)
+        function saveToSheet() {
+            const data = {
+                type: document.getElementById('resType').value,
+                carId: document.getElementById('resCarId').value,
+                invoiceNum: document.getElementById('resInvoiceNum').value,
+                amount: document.getElementById('resAmount').value,
+                note: document.getElementById('resNote').value
+            };
+            google.script.run.withSuccessHandler(() => alert('儲存成功！')).saveData(data);
         }
     </script>
 </body>
